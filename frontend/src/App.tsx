@@ -4,7 +4,7 @@ import Expenses from './Expenses'
 
 type Obra = { id: number; nome: string; cliente: string; endereco: string; orcamento: number; dataInicio: string; previsaoEntrega?: string | null; status: string }
 type Resumo = { totalObras: number; obrasEmAndamento: number; orcamentoTotal: number; totalDespesas: number; saldoDisponivel: number }
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const API = import.meta.env.VITE_API_URL || ''
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const initialForm = () => ({ nome: '', cliente: '', endereco: '', orcamento: '', dataInicio: new Date().toISOString().slice(0, 10), previsaoEntrega: '', status: 'Em andamento' })
 
