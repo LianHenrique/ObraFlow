@@ -3,7 +3,7 @@ import { Plus, Search, Trash2, Wallet } from 'lucide-react'
 
 type Obra = { id: number; nome: string }
 type Despesa = { id: number; descricao: string; categoria: string; valor: number; data: string; obraId: number; obra?: { nome: string } }
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const API = import.meta.env.VITE_API_URL || ''
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 export default function Expenses() {
