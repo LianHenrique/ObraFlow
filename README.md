@@ -104,3 +104,26 @@ VITE_API_URL=http://localhost:5000
 ---
 
 Projeto de portfólio para demonstrar desenvolvimento Full Stack, construção de APIs REST, persistência de dados e integração de frontend com backend.
+
+
+## Executar com Docker
+
+Com Docker Desktop e Docker Compose instalados, execute na raiz do projeto:
+
+```bash
+docker compose up --build
+```
+
+A aplicação ficará disponível em `http://localhost:8085`. O banco SQLite é persistido em um volume Docker chamado `obraflow-data`. Para encerrar:
+
+```bash
+docker compose down
+```
+
+## Integração contínua
+
+O GitHub Actions executa o build do backend (.NET 8) e do frontend (Node.js 22) em pushes e Pull Requests direcionados à branch `main`.
+
+## Contribuição
+
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) para preparar o ambiente e abrir Pull Requests.
