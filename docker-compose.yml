@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: ./backend/ObraFlow.Api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Default: Data Source=/data/obraflow.db
+    volumes:
+      - obraflow-data:/data
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "8085:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  obraflow-data:
