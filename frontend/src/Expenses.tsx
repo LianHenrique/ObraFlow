@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Plus, Search, Trash2, Wallet } from 'lucide-react'
+import { apiFetch } from './api'
 
 type Obra = { id: number; nome: string }
 type Despesa = { id: number; descricao: string; categoria: string; valor: number; data: string; obraId: number; obra?: { nome: string } }
-const API = import.meta.env.VITE_API_URL || ''
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
-export default function Expenses() {
+export default function Expenses({ token }: { token: string }) {
   const [items, setItems] = useState<Despesa[]>([])
   const [obras, setObras] = useState<Obra[]>([])
   const [search, setSearch] = useState('')
@@ -16,7 +16,7 @@ export default function Expenses() {
 
   async function load() {
     try {
-      const responses = await Promise.all([fetch(API + '/api/despesas'), fetch(API + '/api/obras')])
+      const responses = await Promise.all([apiFetch('/api/despesas', token), apiFetch('/api/obras', token)])
       if (!responses[0].ok || !responses[1].ok) throw new Error('Falha ao consultar a API.')
       setItems(await responses[0].json())
       setObras(await responses[1].json())
@@ -27,7 +27,7 @@ export default function Expenses() {
 
   async function save(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const response = await fetch(API + '/api/despesas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, valor: Number(form.valor), obraId: Number(form.obraId), data: new Date(form.data + 'T12:00:00').toISOString() }) })
+    const response = await apiFetch('/api/despesas', token, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, valor: Number(form.valor), obraId: Number(form.obraId), data: new Date(form.data + 'T12:00:00').toISOString() }) })
     if (!response.ok) { setError('Não foi possível salvar. Confira os dados e a obra selecionada.'); return }
     setShowForm(false)
     setForm({ descricao: '', categoria: 'Material', valor: '', data: new Date().toISOString().slice(0, 10), obraId: '' })
@@ -36,7 +36,7 @@ export default function Expenses() {
 
   async function remove(item: Despesa) {
     if (!confirm('Excluir a despesa "' + item.descricao + '"?')) return
-    const response = await fetch(API + '/api/despesas/' + item.id, { method: 'DELETE' })
+    const response = await apiFetch('/api/despesas/' + item.id, token, { method: 'DELETE' })
     if (response.ok) await load()
     else setError('Não foi possível excluir a despesa.')
   }
