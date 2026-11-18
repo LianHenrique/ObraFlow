@@ -4,12 +4,14 @@ Sistema Full Stack para gerenciamento de obras, acompanhamento de despesas e vis
 
 ## Tecnologias
 
-- **Backend:** C#, ASP.NET Core 8, Minimal APIs, Entity Framework Core e SQLite
+- **Backend:** C#, ASP.NET Core 8, Minimal APIs, JWT Bearer, Entity Framework Core e SQLite
 - **Frontend:** React 18, TypeScript, Vite e Lucide
 - **Documentação da API:** Swagger / OpenAPI
 
 ## Funcionalidades
 
+- Cadastro de usuários, login e logout com JWT
+- Senhas protegidas com hash PBKDF2 e isolamento dos dados por conta
 - Cadastro, listagem, edição e exclusão de obras
 - Registro e listagem de despesas vinculadas a uma obra
 - Exclusão de despesas e remoção em cascata ao excluir uma obra
@@ -78,6 +80,14 @@ Por padrão, o frontend consome a API em `http://localhost:5000`. Para usar outr
 VITE_API_URL=http://localhost:5000
 ```
 
+## Autenticação
+
+- `POST /api/auth/register` — cria conta e retorna token JWT
+- `POST /api/auth/login` — autentica e retorna token JWT
+- `GET /api/auth/me` — retorna o usuário autenticado
+- As demais rotas `/api` exigem `Authorization: Bearer <token>`.
+- A sessão é mantida no navegador e encerrada pelo botão **Sair**.
+
 ## Endpoints principais
 
 | Método | Rota | Descrição |
@@ -114,7 +124,7 @@ Com Docker Desktop e Docker Compose instalados, execute na raiz do projeto:
 docker compose up --build
 ```
 
-A aplicação ficará disponível em `http://localhost:8085`. O banco SQLite é persistido em um volume Docker chamado `obraflow-data`. Para encerrar:
+A aplicação ficará disponível em `http://localhost:8085`. O banco SQLite é persistido em um volume Docker chamado `obraflow-data`. Os registros antigos sem usuário são associados à primeira conta cadastrada. Para encerrar:
 
 ```bash
 docker compose down
