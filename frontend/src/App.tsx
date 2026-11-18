@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Activity, ArrowUpRight, Building2, Check, ChevronDown, CircleHelp, ClipboardList, HardHat, LayoutDashboard, Plus, Search, TrendingUp, Wallet, X, Trash2, Pencil, Save } from 'lucide-react'
+import { Activity, ArrowUpRight, Building2, Check, ChevronDown, CircleHelp, ClipboardList, HardHat, LayoutDashboard, Plus, Search, TrendingUp, Wallet, X, Trash2, Pencil, Save, LogOut } from 'lucide-react'
 import Expenses from './Expenses'
+import { apiFetch } from './api'
 
 type Obra = { id: number; nome: string; cliente: string; endereco: string; orcamento: number; dataInicio: string; previsaoEntrega?: string | null; status: string }
 type Resumo = { totalObras: number; obrasEmAndamento: number; orcamentoTotal: number; totalDespesas: number; saldoDisponivel: number }
-const API = import.meta.env.VITE_API_URL || ''
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const formatCurrencyInput = (value: string) => {
   const digits = value.replace(/\D/g, '')
@@ -20,7 +20,9 @@ const dateForInput = (value?: string | null) => {
 }
 const initialForm = () => ({ nome: '', cliente: '', endereco: '', orcamento: '', dataInicio: new Date().toISOString().slice(0, 10), previsaoEntrega: '', status: 'Em andamento' })
 
-export default function App() {
+type AppProps = { token: string; user: { id: string; nome: string; email: string }; onLogout: () => void }
+
+export default function App({ token, user, onLogout }: AppProps) {
   const [page, setPage] = useState<'dashboard' | 'obras' | 'financeiro' | 'relatorios'>('dashboard')
   const [obras, setObras] = useState<Obra[]>([])
   const [resumo, setResumo] = useState<Resumo>({ totalObras: 0, obrasEmAndamento: 0, orcamentoTotal: 0, totalDespesas: 0, saldoDisponivel: 0 })
@@ -37,7 +39,7 @@ export default function App() {
   async function load() {
     try {
       setError('')
-      const [worksResponse, summaryResponse] = await Promise.all([fetch(API + '/api/obras'), fetch(API + '/api/dashboard/resumo')])
+      const [worksResponse, summaryResponse] = await Promise.all([apiFetch('/api/obras', token), apiFetch('/api/dashboard/resumo', token)])
       if (!worksResponse.ok || !summaryResponse.ok) throw new Error('Não foi possível carregar os dados da API.')
       setObras(await worksResponse.json())
       setResumo(await summaryResponse.json())
@@ -87,7 +89,7 @@ export default function App() {
         dataInicio: new Date(form.dataInicio + 'T12:00:00').toISOString(),
         previsaoEntrega: form.previsaoEntrega ? new Date(form.previsaoEntrega + 'T12:00:00').toISOString() : null
       }
-      const response = await fetch(API + (editingObra ? '/api/obras/' + editingObra.id : '/api/obras'), {
+      const response = await apiFetch((editingObra ? '/api/obras/' + editingObra.id : '/api/obras'), token, {
         method: editingObra ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -108,7 +110,7 @@ export default function App() {
     if (!deleteTarget) return
     setDeleting(true)
     try {
-      const response = await fetch(API + '/api/obras/' + deleteTarget.id, { method: 'DELETE' })
+      const response = await apiFetch('/api/obras/' + deleteTarget.id, token, { method: 'DELETE' })
       if (!response.ok) throw new Error('Não foi possível excluir a obra.')
       setDeleteTarget(null)
       await load()
@@ -126,12 +128,12 @@ export default function App() {
         <button className={'nav-item ' + (page === 'financeiro' ? 'active' : '')} onClick={() => setPage('financeiro')}><Wallet size={18}/> Financeiro</button>
         <button className={'nav-item ' + (page === 'relatorios' ? 'active' : '')} onClick={() => setPage('relatorios')}><ClipboardList size={18}/> Relatórios</button>
       </nav>
-      <div className="sidebar-bottom"><div className="help-card"><CircleHelp size={18}/><strong>Precisa de ajuda?</strong><p>Acompanhe suas obras com mais controle.</p></div><div className="profile"><div className="avatar">OF</div><div><strong>Administrador</strong><small>Conta de demonstração</small></div><ChevronDown size={16}/></div></div>
+      <div className="sidebar-bottom"><div className="help-card"><CircleHelp size={18}/><strong>Precisa de ajuda?</strong><p>Acompanhe suas obras com mais controle.</p></div><div className="profile"><div className="avatar">{user.nome.slice(0,2).toUpperCase()}</div><div className="profile-details"><strong>{user.nome}</strong><small>{user.email}</small></div><button className="logout-button" onClick={onLogout} title="Sair da conta" aria-label="Sair da conta"><LogOut size={17}/></button></div></div>
     </aside>
     <main className="main-content">
       <header className="topbar"><div className="breadcrumb">Workspace <span>/</span> <strong>{pageTitle}</strong></div><div className="top-actions"><span className="live-dot">Sistema online</span><div className="avatar small-avatar">OF</div></div></header>
       {error && <div className="error-banner">{error}<button onClick={() => void load()}>Tentar novamente</button><button aria-label="Fechar aviso" onClick={() => setError('')}><X size={14}/></button></div>}
-      {page === 'financeiro' ? <Expenses/> : page === 'relatorios' ? <><section className="page-heading"><div><div className="eyebrow">ANÁLISE E DESEMPENHO</div><h1>Relatórios</h1><p>Resumo consolidado da carteira de obras.</p></div><button className="secondary-button" onClick={() => window.print()}>Imprimir relatório</button></section><section className="metrics-grid"><Metric title="Obras cadastradas" value={String(resumo.totalObras)} note="Total de projetos" icon={<Building2/>} tone="blue"/><Metric title="Obras em andamento" value={String(resumo.obrasEmAndamento)} note="Projetos ativos" icon={<Activity/>} tone="green"/><Metric title="Orçamento total" value={money(resumo.orcamentoTotal)} note="Valor planejado" icon={<Wallet/>} tone="purple"/><Metric title="Despesas acumuladas" value={money(resumo.totalDespesas)} note="Total lançado" icon={<TrendingUp/>} tone="orange"/></section><section className="panel projects-panel report-panel"><div className="projects-header"><div><span className="eyebrow">DISTRIBUIÇÃO</span><h2>Resumo por obra</h2></div></div><div className="table-wrap"><table><thead><tr><th>OBRA</th><th>CLIENTE</th><th>ORÇAMENTO</th><th>STATUS</th></tr></thead><tbody>{obras.map(o => <tr key={o.id}><td className="amount-cell">{o.nome}</td><td>{o.cliente}</td><td>{money(o.orcamento)}</td><td><span className={'status-pill ' + statusClass(o.status)}>{o.status}</span></td></tr>)}</tbody></table></div></section></> : <>
+      {page === 'financeiro' ? <Expenses token={token}/> : page === 'relatorios' ? <><section className="page-heading"><div><div className="eyebrow">ANÁLISE E DESEMPENHO</div><h1>Relatórios</h1><p>Resumo consolidado da carteira de obras.</p></div><button className="secondary-button" onClick={() => window.print()}>Imprimir relatório</button></section><section className="metrics-grid"><Metric title="Obras cadastradas" value={String(resumo.totalObras)} note="Total de projetos" icon={<Building2/>} tone="blue"/><Metric title="Obras em andamento" value={String(resumo.obrasEmAndamento)} note="Projetos ativos" icon={<Activity/>} tone="green"/><Metric title="Orçamento total" value={money(resumo.orcamentoTotal)} note="Valor planejado" icon={<Wallet/>} tone="purple"/><Metric title="Despesas acumuladas" value={money(resumo.totalDespesas)} note="Total lançado" icon={<TrendingUp/>} tone="orange"/></section><section className="panel projects-panel report-panel"><div className="projects-header"><div><span className="eyebrow">DISTRIBUIÇÃO</span><h2>Resumo por obra</h2></div></div><div className="table-wrap"><table><thead><tr><th>OBRA</th><th>CLIENTE</th><th>ORÇAMENTO</th><th>STATUS</th></tr></thead><tbody>{obras.map(o => <tr key={o.id}><td className="amount-cell">{o.nome}</td><td>{o.cliente}</td><td>{money(o.orcamento)}</td><td><span className={'status-pill ' + statusClass(o.status)}>{o.status}</span></td></tr>)}</tbody></table></div></section></> : <>
         <section className="page-heading"><div><div className="eyebrow">{page === 'obras' ? 'GERENCIAMENTO DE PROJETOS' : 'PAINEL DE CONTROLE'}</div><h1>{pageTitle}</h1><p>{page === 'obras' ? 'Cadastre, consulte e acompanhe seus projetos.' : 'Acompanhe o desempenho e a evolução das suas obras.'}</p></div><button className="primary-button" onClick={openCreateModal}><Plus size={18}/> Nova obra</button></section>
         {page === 'dashboard' && <>
           <section className="metrics-grid"><Metric title="Total de obras" value={String(resumo.totalObras)} note="Obras cadastradas" icon={<Building2/>} tone="blue"/><Metric title="Em andamento" value={String(resumo.obrasEmAndamento)} note="Projetos ativos" icon={<Activity/>} tone="green"/><Metric title="Orçamento total" value={money(resumo.orcamentoTotal)} note="Valor planejado" icon={<Wallet/>} tone="purple"/><Metric title="Despesas registradas" value={money(resumo.totalDespesas)} note="Total lançado" icon={<TrendingUp/>} tone="orange"/></section>
