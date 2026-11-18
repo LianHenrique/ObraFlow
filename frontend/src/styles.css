@@ -40,3 +40,34 @@ input:disabled, select:disabled, textarea:disabled {
   color: #526074;
   -webkit-text-fill-color: #526074;
 }
+
+
+/* Stronger contrast for text entered in every form and search field */
+.modal input,
+.modal select,
+.modal textarea,
+.search-box input,
+input,
+select,
+textarea {
+  color: #101828 !important;
+  -webkit-text-fill-color: #101828;
+  font-weight: 600;
+  opacity: 1;
+}
+.modal input::placeholder,
+.modal textarea::placeholder,
+.search-box input::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #667085 !important;
+  -webkit-text-fill-color: #667085;
+  opacity: 1;
+}
+.modal input:focus,
+.modal select:focus,
+.modal textarea:focus,
+.search-box input:focus {
+  color: #101828 !important;
+  -webkit-text-fill-color: #101828;
+}
