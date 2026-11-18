@@ -106,3 +106,7 @@ textarea::placeholder {
 .date-filters input{height:34px;border:1px solid #e2e7ee;border-radius:6px;padding:0 8px;color:#101828;font:11px 'DM Sans'}
 .finance-panel .metric-value{font-size:19px}
 @media(max-width:760px){.finance-filters{width:100%}.finance-filters .search-box{width:100%;flex-basis:100%}.date-filters{padding:0 14px 14px}.finance-header{padding:0 14px 14px}}
+
+
+/* Numeric fields: consistent right alignment and tabular digits */
+.currency-input { text-align: right; font-variant-numeric: tabular-nums; letter-spacing: .15px; }
