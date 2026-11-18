@@ -7,9 +7,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Obra> Obras => Set<Obra>();
     public DbSet<Despesa> Despesas => Set<Despesa>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Usuario>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<Obra>().Property(o => o.Orcamento).HasPrecision(12, 2);
         modelBuilder.Entity<Despesa>().Property(d => d.Valor).HasPrecision(12, 2);
         modelBuilder.Entity<Obra>().HasMany(o => o.Despesas)
