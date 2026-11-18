@@ -25,3 +25,18 @@
 .danger-button:disabled{opacity:.6;cursor:wait}
 .confirm-modal .modal-actions{width:100%}
 @media(max-width:430px){.confirm-modal{padding:20px}}
+
+
+/* Improve form field readability */
+input, select, textarea {
+  color: #17263b;
+  font-weight: 500;
+}
+input::placeholder, textarea::placeholder {
+  color: #8995a5;
+  opacity: 1;
+}
+input:disabled, select:disabled, textarea:disabled {
+  color: #526074;
+  -webkit-text-fill-color: #526074;
+}
