@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ObraFlow.Api.Models;
 
 public class Despesa
@@ -9,5 +11,8 @@ public class Despesa
     public decimal Valor { get; set; }
     public DateTime Data { get; set; } = DateTime.UtcNow;
     public int ObraId { get; set; }
+
+    // Evita ciclo de serialização: Obra -> Despesas -> Obra.
+    [JsonIgnore]
     public Obra? Obra { get; set; }
 }
