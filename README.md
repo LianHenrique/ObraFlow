@@ -13,8 +13,10 @@ Sistema Full Stack para gerenciamento de obras, acompanhamento de despesas e vis
 - Cadastro de usuários, login e logout com JWT
 - Senhas protegidas com hash PBKDF2 e isolamento dos dados por conta
 - Cadastro, listagem, edição e exclusão de obras
-- Registro e listagem de despesas vinculadas a uma obra
-- Exclusão de despesas e remoção em cascata ao excluir uma obra
+- Registro, edição, listagem e exclusão de despesas vinculadas a uma obra
+- Registro, edição, listagem e exclusão de receitas, com vínculo opcional a uma obra
+- Fluxo financeiro com totais de entradas, saídas e resultado
+- Filtros por período, busca textual e formatação monetária brasileira
 - Dashboard com quantidade de obras, projetos em andamento, orçamento, despesas e saldo
 - Busca de obras por nome, cliente ou status
 - Interface responsiva com formulário de cadastro
@@ -99,14 +101,19 @@ VITE_API_URL=http://localhost:5000
 | PUT | `/api/obras/{id}` | Atualiza uma obra |
 | DELETE | `/api/obras/{id}` | Exclui uma obra |
 | GET | `/api/despesas` | Lista despesas |
-| POST | `/api/despesas` | Registra uma despesa |
-| DELETE | `/api/despesas/{id}` | Exclui uma despesa |
+| POST | `/api/despesas` | Registra despesa |
+| PUT | `/api/despesas/{id}` | Atualiza despesa |
+| DELETE | `/api/despesas/{id}` | Exclui despesa |
+| GET | `/api/receitas` | Lista receitas |
+| POST | `/api/receitas` | Registra receita |
+| PUT | `/api/receitas/{id}` | Atualiza receita |
+| DELETE | `/api/receitas/{id}` | Exclui receita |
 | GET | `/api/dashboard/resumo` | Retorna indicadores financeiros |
 
 ## Próximas melhorias
 
 - Autenticação e autorização de usuários
-- Edição e filtros avançados de despesas
+- Exportação de relatórios financeiros em PDF e Excel
 - Testes automatizados para API e interface
 - Migrações do Entity Framework Core
 - Docker e pipeline CI/CD
