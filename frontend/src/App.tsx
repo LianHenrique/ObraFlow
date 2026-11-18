@@ -7,11 +7,11 @@ type Resumo = { totalObras: number; obrasEmAndamento: number; orcamentoTotal: nu
 const API = import.meta.env.VITE_API_URL || ''
 const money = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 const formatCurrencyInput = (value: string) => {
-  const digits = value.replace(/\\D/g, '')
+  const digits = value.replace(/\D/g, '')
   if (!digits) return ''
   return (Number(digits) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
-const parseCurrencyInput = (value: string) => Number(value.replace(/\\D/g, '') || 0) / 100
+const parseCurrencyInput = (value: string) => Number(value.replace(/\D/g, '') || 0) / 100
 const dateForInput = (value?: string | null) => {
   if (!value) return ''
   const date = new Date(value)
