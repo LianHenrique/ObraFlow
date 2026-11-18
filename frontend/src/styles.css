@@ -8,3 +8,20 @@
 .report-panel{margin-top:18px}
 .form-hint{font-size:10px;color:#a36b30;margin:10px 0 0}
 @media(max-width:760px){.expense-summary{grid-template-columns:1fr 1fr}}
+
+
+/* Work editing, currency field and branded delete confirmation */
+.row-actions{display:flex;align-items:center;gap:4px}
+.icon-button.edit:hover{background:#edf4ff;color:#2878e5}
+.field-hint{font-size:9px;font-weight:400;color:#929dac;line-height:1.4;margin-top:-2px}
+.confirm-modal{width:min(100%,430px);background:#fff;border:1px solid #e9edf3;border-radius:12px;padding:25px;box-shadow:0 20px 70px #07152a40;display:flex;flex-direction:column;align-items:flex-start}
+.confirm-icon{width:46px;height:46px;border-radius:12px;background:#fff0ef;color:#d15e58;display:grid;place-items:center;margin-bottom:17px}
+.confirm-content .eyebrow{color:#c16b64}
+.confirm-content h2{font:700 19px Manrope,sans-serif;color:#1e2b3d;margin:6px 0 9px}
+.confirm-content p{font-size:12px;line-height:1.65;color:#788596;margin:0}
+.confirm-content p strong{color:#354358}
+.danger-button{border:0;border-radius:7px;padding:11px 15px;background:#d85d57;color:#fff;font:600 12px 'DM Sans';display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.danger-button:hover{background:#c64b45}
+.danger-button:disabled{opacity:.6;cursor:wait}
+.confirm-modal .modal-actions{width:100%}
+@media(max-width:430px){.confirm-modal{padding:20px}}
