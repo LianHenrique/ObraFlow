@@ -94,3 +94,15 @@ textarea::placeholder {
 .logout-button:hover{background:#2a3d58;color:white}
 .profile-details{min-width:0;overflow:hidden}.profile-details small{max-width:145px;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:760px){.auth-card{padding:25px 21px}.sidebar .profile-details{display:none}.sidebar .logout-button{margin:0 auto}}
+
+/* Financeiro: filtros, abas e entradas/saídas */
+.finance-header{align-items:flex-start;gap:16px;flex-wrap:wrap}
+.finance-filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.finance-tabs{display:flex;padding:3px;background:#f0f3f8;border-radius:7px;gap:3px}
+.finance-tabs button{border:0;background:transparent;border-radius:5px;padding:8px 12px;color:#687588;font:600 10px 'DM Sans';cursor:pointer}
+.finance-tabs button.selected{background:#fff;color:#2878e5;box-shadow:0 1px 4px #1c34501a}
+.date-filters{display:flex;align-items:end;gap:10px;padding:0 20px 16px;flex-wrap:wrap}
+.date-filters label{display:flex;flex-direction:column;gap:5px;color:#657286;font-size:10px;font-weight:600}
+.date-filters input{height:34px;border:1px solid #e2e7ee;border-radius:6px;padding:0 8px;color:#101828;font:11px 'DM Sans'}
+.finance-panel .metric-value{font-size:19px}
+@media(max-width:760px){.finance-filters{width:100%}.finance-filters .search-box{width:100%;flex-basis:100%}.date-filters{padding:0 14px 14px}.finance-header{padding:0 14px 14px}}
